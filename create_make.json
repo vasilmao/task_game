@@ -1,0 +1,19 @@
+{
+    "targets" : [
+        "src/Game.cpp"
+    ],
+
+    "prohibited_dirs" : [
+        ".git",
+        ".vscode",
+        "build",
+        "obj"
+    ],
+
+    "flags" : {
+        "IFLAGS" : "ALL",
+        "CFLAGS" : ["-Wall",
+            "-std=c++17"],
+        "LFLAGS" : ["-rdynamic -lm -lX11"]
+    }
+}
