@@ -1,6 +1,9 @@
+#pragma once
+
 enum EntityTypeId {
-    PLAYER = 1,
-    BOUND_LINE,
+    PLAYER,
+    WALL,
     ENEMY,
-    BULLET
+    BULLET,
+    ENTITY_TYPE_CNT
 };

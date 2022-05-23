@@ -1,13 +1,25 @@
 all: Makefile Game.out 
 
-Game.out: Makefile obj/Game.o obj/CollisionManager.o obj/Tools.o obj/Scene.o obj/Registry.o obj/Api.o obj/EntityHandle.o obj/PlayerDrawer.o obj/Vector.o obj/Engine.o obj/Renderer.o 
-	g++ obj/Game.o obj/CollisionManager.o obj/Tools.o obj/Scene.o obj/Registry.o obj/Api.o obj/EntityHandle.o obj/PlayerDrawer.o obj/Vector.o obj/Engine.o obj/Renderer.o -rdynamic -lm -lX11 -o Game.out
+Game.out: Makefile obj/Game.o obj/CollisionManager.o obj/CollisionResponce.o obj/Tools.o obj/Scene.o obj/Registry.o obj/Api.o obj/EntityHandle.o obj/EnemyDrawer.o obj/PlayerDrawer.o obj/Vector.o obj/Engine.o obj/Renderer.o 
+	g++ obj/Game.o obj/CollisionManager.o obj/CollisionResponce.o obj/Tools.o obj/Scene.o obj/Registry.o obj/Api.o obj/EntityHandle.o obj/EnemyDrawer.o obj/PlayerDrawer.o obj/Vector.o obj/Engine.o obj/Renderer.o -rdynamic -lm -lX11 -o Game.out
 
 obj/CollisionManager.o: src/collision/CollisionManager.cpp \
  include/collision/CollisionManager.hpp \
  include/collision/CollisionTypes.hpp include/Vector.hpp \
  include/Tools.hpp Makefile
 	g++ -I . -I ./include -I ./include/collision -I ./include/ecs -I ./include/drawers -I ./src -I ./src/collision -I ./src/ecs -I ./src/drawers -Wall -std=c++17 -c ./src/collision/CollisionManager.cpp -o obj/CollisionManager.o
+
+obj/CollisionResponce.o: src/collision/CollisionResponce.cpp \
+ include/collision/CollisionResponce.hpp include/EntityTypes.hpp \
+ include/ecs/Api.hpp include/ecs/EntityHandle.hpp \
+ include/ecs/Registry.hpp include/ecs/ComponentHolder.hpp \
+ include/ecs/Generator.hpp include/ecs/Generator.ipp \
+ include/ecs/ComponentHolder.ipp include/ecs/Registry.ipp \
+ include/ecs/EntityHandle.ipp include/ecs/View.hpp include/ecs/View.ipp \
+ include/ecs/Api.ipp include/Components.hpp include/Vector.hpp \
+ include/Tools.hpp include/Renderer.hpp include/Engine.h \
+ include/collision/CollisionTypes.hpp Makefile
+	g++ -I . -I ./include -I ./include/collision -I ./include/ecs -I ./include/drawers -I ./src -I ./src/collision -I ./src/ecs -I ./src/drawers -Wall -std=c++17 -c ./src/collision/CollisionResponce.cpp -o obj/CollisionResponce.o
 
 obj/Tools.o: src/Tools.cpp include/Tools.hpp Makefile
 	g++ -I . -I ./include -I ./include/collision -I ./include/ecs -I ./include/drawers -I ./src -I ./src/collision -I ./src/ecs -I ./src/drawers -Wall -std=c++17 -c ./src/Tools.cpp -o obj/Tools.o
@@ -41,6 +53,18 @@ obj/EntityHandle.o: src/ecs/EntityHandle.cpp include/ecs/EntityHandle.hpp \
  include/ecs/EntityHandle.ipp Makefile
 	g++ -I . -I ./include -I ./include/collision -I ./include/ecs -I ./include/drawers -I ./src -I ./src/collision -I ./src/ecs -I ./src/drawers -Wall -std=c++17 -c ./src/ecs/EntityHandle.cpp -o obj/EntityHandle.o
 
+obj/EnemyDrawer.o: src/drawers/EnemyDrawer.cpp \
+ include/drawers/EnemyDrawer.hpp include/ecs/Api.hpp \
+ include/ecs/EntityHandle.hpp include/ecs/Registry.hpp \
+ include/ecs/ComponentHolder.hpp include/ecs/Generator.hpp \
+ include/ecs/Generator.ipp include/ecs/ComponentHolder.ipp \
+ include/ecs/Registry.ipp include/ecs/EntityHandle.ipp \
+ include/ecs/View.hpp include/ecs/View.ipp include/ecs/Api.ipp \
+ include/Renderer.hpp include/Engine.h include/Vector.hpp \
+ include/Tools.hpp include/Components.hpp include/EntityTypes.hpp \
+ include/collision/CollisionTypes.hpp Makefile
+	g++ -I . -I ./include -I ./include/collision -I ./include/ecs -I ./include/drawers -I ./src -I ./src/collision -I ./src/ecs -I ./src/drawers -Wall -std=c++17 -c ./src/drawers/EnemyDrawer.cpp -o obj/EnemyDrawer.o
+
 obj/PlayerDrawer.o: src/drawers/PlayerDrawer.cpp \
  include/drawers/PlayerDrawer.hpp include/ecs/Api.hpp \
  include/ecs/EntityHandle.hpp include/ecs/Registry.hpp \
@@ -72,6 +96,8 @@ obj/Game.o: src/Game.cpp include/Engine.h include/Scene.hpp \
  include/ecs/Api.ipp include/Components.hpp include/Vector.hpp \
  include/Tools.hpp include/Renderer.hpp include/EntityTypes.hpp \
  include/collision/CollisionTypes.hpp include/drawers/Drawers.hpp \
- include/drawers/PlayerDrawer.hpp Makefile
+ include/drawers/PlayerDrawer.hpp include/drawers/EnemyDrawer.hpp \
+ include/collision/CollisionManager.hpp \
+ include/collision/CollisionResponce.hpp Makefile
 	g++ -I . -I ./include -I ./include/collision -I ./include/ecs -I ./include/drawers -I ./src -I ./src/collision -I ./src/ecs -I ./src/drawers -Wall -std=c++17 -c src/Game.cpp -o obj/Game.o
 

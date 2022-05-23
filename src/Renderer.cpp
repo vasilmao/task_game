@@ -15,8 +15,9 @@ void Renderer::DrawSegment(Vector2 p1, Vector2 p2, Color color) {
     int endy = p2.GetY();
 
     while (true) {
-        std::cout << curx << " " << cury << "\n";
-        buffer_[curx + cury * width_] = int32_color(color);
+        if (0 <= curx && curx <= width_ && 0 <= cury && cury <= height_) {
+            buffer_[curx + cury * width_] = int32_color(color);
+        }
         if (curx == endx && cury == endy) {
             break;
         }
@@ -36,5 +37,4 @@ void Renderer::DrawSegment(Vector2 p1, Vector2 p2, Color color) {
             cury += sy;
         }
     }
-    std::cout << "YES!\n";
 }

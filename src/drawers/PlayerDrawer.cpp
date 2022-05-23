@@ -4,7 +4,6 @@
 #include <iostream>
 
 void PlayerDrawer::Render(Renderer& renderer) {
-    std::cout << "ya\n";
     Vector2 pos = player_.GetComponent<Transform>()->pos;
     float rotation = player_.GetComponent<Transform>()->rotation;
     Vector2 up_point{pos.GetX(), pos.GetY() - r_};

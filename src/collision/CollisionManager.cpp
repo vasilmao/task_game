@@ -1,10 +1,12 @@
 #include "CollisionManager.hpp"
 #include <algorithm>
+#include <iostream>
 
 bool CollisionManager::DetectCollision(ICollisionShape* s1, ICollisionShape* s2) {
     if (s1->GetType() > s2->GetType()) {
         std::swap(s1, s2);
     }
+    std::cout << s1->GetType() << " " << s2->GetType() << "\n";
     return (*detect_collision_virtual_table_[(int)s1->GetType()][(int)s2->GetType()])(s1, s2);
 }
 
@@ -18,7 +20,8 @@ bool DetectCollisionCC(CollisionCircle* c1, CollisionCircle* c2) {
     return DistSquare(c1->GetCenter(), c2->GetCenter()) <= radius_sum * radius_sum;
 }
 
-bool detectCollisionCW(CollisionCircle* circle, CollisionWall* wall, const float dt) {
+bool DetectCollisionCW(CollisionCircle* circle, CollisionWall* wall) {
+    std::cout << "mmm...\n";
     Vector2 v1 = wall->GetFirstPoint();
     Vector2 v2 = wall->GetSecondPoint();
     Vector2 v3 = v2 - v1;
@@ -33,7 +36,7 @@ bool detectCollisionCW(CollisionCircle* circle, CollisionWall* wall, const float
     return false;
 }
 
-bool detectCollisionWW(CollisionWall* w1, CollisionWall* w2, const float dt) {
+bool DetectCollisionWW(CollisionWall* w1, CollisionWall* w2) {
     // no
     return false;
 }

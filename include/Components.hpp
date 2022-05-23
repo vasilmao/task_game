@@ -9,6 +9,10 @@ struct Health {
     int max_value = 100;
 };
 
+struct Damage {
+    int damage;
+};
+
 struct RenderComponent {
     std::function<void(Renderer&)> render; // rotation
 };
@@ -19,7 +23,7 @@ struct Transform {
 };
 
 struct EntityTypeComponent {
-    EntityTypeId type_;
+    EntityTypeId type;
 };
 
 struct CollisionShape {
@@ -29,4 +33,10 @@ struct CollisionShape {
     ~CollisionShape() {
         delete form;
     }
+};
+
+struct OnDelete {};
+
+struct Speed {
+    Vector2 speed;
 };

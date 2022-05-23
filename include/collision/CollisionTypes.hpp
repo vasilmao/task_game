@@ -1,8 +1,10 @@
+#pragma once
+
 #include "Vector.hpp"
 
 enum CollisionTypes {
-    CIRCLE,
-    WALL
+    COLLISION_CIRCLE,
+    COLLISION_WALL
 };
 
 class ICollisionShape{
@@ -10,6 +12,8 @@ class ICollisionShape{
     CollisionTypes GetType() {
         return collision_type_;
     }
+
+    virtual ~ICollisionShape() {}
   protected:
     ICollisionShape(CollisionTypes collision_type) : collision_type_(collision_type) {}
     CollisionTypes collision_type_;
@@ -17,7 +21,7 @@ class ICollisionShape{
 
 class CollisionCircle : public ICollisionShape {
   public:
-    CollisionCircle(const Vector2& center, float r) : ICollisionShape(CIRCLE), center_{center}, r_{r} {}
+    CollisionCircle(const Vector2& center, float r) : ICollisionShape(COLLISION_CIRCLE), center_{center}, r_{r} {}
     float GetR() {
       return r_;
     }
@@ -35,7 +39,7 @@ class CollisionCircle : public ICollisionShape {
 
 class CollisionWall : public ICollisionShape {
   public:
-    CollisionWall(const Vector2& pos1, const Vector2& pos2) : ICollisionShape(WALL), pos1_{pos1}, pos2_{pos2} {}
+    CollisionWall(const Vector2& pos1, const Vector2& pos2) : ICollisionShape(COLLISION_WALL), pos1_{pos1}, pos2_{pos2} {}
     const Vector2& GetFirstPoint() {
       return pos1_;
     }
