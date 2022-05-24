@@ -1,5 +1,5 @@
 #include "ObjectSpawn.hpp"
-
+#include <random>
 #include "Components.hpp"
 #include "drawers/Drawers.hpp"
 
@@ -24,5 +24,23 @@ EntityHandle CreateStrangeEnemy(EntityRegistry& registry, const Vector2& pos, fl
   enemy.AddComponent<CollisionShape>(new CollisionCircle{Vector2{300, 300}, r});
   enemy.AddComponent<Speed>(speed);
   enemy.AddComponent<EntityTypeComponent>(ENEMY);
+  enemy.AddComponent<RotationSpeed>(1.5f);
   return enemy;
+}
+
+void EnemySpawner::TrySpawn(const TimeEvent& event) {
+    time_from_last_spawn += event.dt;
+    if (time_from_last_spawn > spawn_delay_) {
+        time_from_last_spawn -= spawn_delay_;
+        float enemy_r = 20.0f;
+        float min = enemy_r + 20.0f;
+        float max_x = field_size_.GetX() - 1 - min;
+        float max_y = field_size_.GetY() - 1 - min;
+        float random_x = enemy_r + 10.0f + (rand() % static_cast<int>(max_x - min + 1));
+        float random_y = enemy_r + 10.0f + (rand() % static_cast<int>(max_y - min + 1));
+
+        float random_speed_x = 50 + (rand() % 200);
+        float random_speed_y = 50 + (rand() % 200);
+        scene_.AddEntity(CreateStrangeEnemy(registry_, Vector2{random_x, random_y}, enemy_r, Vector2{random_speed_x, random_speed_y}));
+    }
 }

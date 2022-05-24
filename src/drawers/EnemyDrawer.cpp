@@ -8,20 +8,18 @@ void StrangeEnemyDrawer::Render(Renderer& renderer) {
   float rotation = enemy_.GetComponent<Transform>()->rotation;
   Vector2 up_point{pos.GetX(), pos.GetY() - r_};
   Vector2 down_point{pos.GetX(), pos.GetY() + r_};
+  Vector2 left_point{pos.GetX() - r_, pos.GetY()};
+  Vector2 right_point{pos.GetX() + r_, pos.GetY()};
 
-  Vector2 point1 = up_point.Rotate(pos, rotation);
-
+  up_point = up_point.Rotate(pos, rotation);
   down_point = down_point.Rotate(pos, rotation);
-
-  Vector2 point3 = down_point;
-
-  Vector2 point2 = down_point.Rotate(pos, acos(4.0f / 5.0f));
-  Vector2 point4 = down_point.Rotate(pos, -acos(4.0f / 5.0f));
+  left_point = left_point.Rotate(pos, rotation);
+  right_point = right_point.Rotate(pos, rotation);
 
   Color enemy_color = {255, 0, 255, 255};
 
-  renderer.DrawSegment(point1, point2, enemy_color);
-  renderer.DrawSegment(point2, point3, enemy_color);
-  renderer.DrawSegment(point3, point4, enemy_color);
-  renderer.DrawSegment(point4, point1, enemy_color);
+  renderer.DrawSegment(up_point, right_point, enemy_color);
+  renderer.DrawSegment(right_point, down_point, enemy_color);
+  renderer.DrawSegment(down_point, left_point, enemy_color);
+  renderer.DrawSegment(left_point, up_point, enemy_color);
 }

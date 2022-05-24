@@ -41,6 +41,10 @@ struct Speed {
   Vector2 speed;
 };
 
+struct RotationSpeed {
+  float rotation_speed;
+};
+
 struct Weapon {
   IWeapon* weapon;
   ~Weapon() { delete weapon; }

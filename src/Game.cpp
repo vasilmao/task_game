@@ -34,6 +34,7 @@ CollisionResponcer responcer{};
 Dispatcher dispatcher{};
 InputHandler* input_handler;
 PlayerEventHandler* player_event_handler;
+EnemySpawner* spawner;
 
 
 void AddWalls();
@@ -46,6 +47,10 @@ void initialize()
   input_handler = new InputHandler{dispatcher};
   renderer = new Renderer{reinterpret_cast<uint32_t*>(buffer), SCREEN_WIDTH, SCREEN_HEIGHT};
   scene = new Scene{registry};
+
+  spawner = new EnemySpawner{*scene, registry, {SCREEN_WIDTH, SCREEN_HEIGHT}};
+
+  dispatcher.GetSink<TimeEvent>().Connect<&EnemySpawner::TrySpawn>(*spawner);
 
   EntityHandle player = CreatePlayer(registry, {100, 100}, 20.0f);
 
@@ -83,6 +88,9 @@ void act(float dt)
   for (auto it = entities.begin(); it != entities.end(); ++it) {
     if (it->HasComponent<Speed>() && it->HasComponent<Transform>()) {
       it->GetComponent<Transform>()->pos += (it->GetComponent<Speed>()->speed) * dt;
+      if (it->HasComponent<RotationSpeed>()) {
+        it->GetComponent<Transform>()->rotation += it->GetComponent<RotationSpeed>()->rotation_speed * dt;
+      }
       if (it->HasComponent<CollisionShape>()) {
         ICollisionShape* shape = it->GetComponent<CollisionShape>()->form;
         if (shape->GetType() == COLLISION_CIRCLE) {
@@ -134,6 +142,7 @@ void draw()
 // free game data in this function
 void finalize()
 {
+  delete spawner;
   delete scene;
   delete input_handler;
 }
