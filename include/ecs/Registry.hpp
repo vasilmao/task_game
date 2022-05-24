@@ -1,11 +1,11 @@
 #pragma once
 
-#include "ecs/ComponentHolder.hpp"
-#include "ecs/Generator.hpp"
-
 #include <cassert>
 #include <cstdint>
 #include <unordered_map>
+
+#include "ecs/ComponentHolder.hpp"
+#include "ecs/Generator.hpp"
 
 using EntityId = uint64_t;
 

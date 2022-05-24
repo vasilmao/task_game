@@ -10,6 +10,7 @@ class Scene {
   void AddEntity(const EntityHandle& handle);
   std::list<EntityHandle>& GetEntities();
   ~Scene();
+
  private:
   EntityRegistry& registry_;
   // EntityHandle player_;
@@ -18,5 +19,4 @@ class Scene {
   // std::list<EntityHandle> pickable_items_;
 
   std::list<EntityHandle> entities_;
-
 };

@@ -1,8 +1,6 @@
 template <typename ComponentT>
 View<ComponentT>::Iterator::Iterator(EntityMapIterator iterator, EntityRegistry& registry)
-    : iterator_{iterator},
-      registry_{registry} {
-}
+    : iterator_{iterator}, registry_{registry} {}
 
 template <typename ComponentT>
 typename View<ComponentT>::Iterator& View<ComponentT>::Iterator::operator++() {
@@ -30,14 +28,12 @@ EntityHandle View<ComponentT>::Iterator::GetEntityHandle() const {
 }
 
 template <typename ComponentT>
-View<ComponentT>::View(EntityMap& entity_map, EntityRegistry& registry) 
-    : entity_map_{entity_map},
-      registry_{registry} {
-}
+View<ComponentT>::View(EntityMap& entity_map, EntityRegistry& registry)
+    : entity_map_{entity_map}, registry_{registry} {}
 
 template <typename ComponentT>
 typename View<ComponentT>::Iterator View<ComponentT>::begin() {
-  return Iterator{entity_map_.begin(), registry_}; 
+  return Iterator{entity_map_.begin(), registry_};
 }
 
 template <typename ComponentT>

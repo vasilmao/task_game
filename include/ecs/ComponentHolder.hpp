@@ -1,9 +1,9 @@
 #pragma once
 
-#include "ecs/Generator.hpp"
-
 #include <cstdint>
 #include <utility>
+
+#include "ecs/Generator.hpp"
 
 using ComponentTypeId = uint64_t;
 using ComponentTypeIdGenerator = StaticIdGenerator<ComponentTypeId>;

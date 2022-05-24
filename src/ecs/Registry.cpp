@@ -1,10 +1,7 @@
 #include "ecs/Registry.hpp"
 
-#include <iostream>
-
 EntityId EntityRegistry::CreateEntity() {
   EntityId id = entity_id_generator_.Next();
-  std::cout << id <<"\n";
   entities_.emplace(id, ComponentMap{});
   return id;
 }
@@ -20,7 +17,7 @@ void EntityRegistry::DestroyEntity(EntityId id) {
     delete component_to_remove_holder;
   }
 
-	entities_.erase(id);
+  entities_.erase(id);
 }
 
 void EntityRegistry::DestroyAllEntities() {

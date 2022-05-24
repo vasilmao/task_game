@@ -24,10 +24,10 @@ struct RightMouseDown {};
 struct RightMouseUp {};
 
 struct MouseMoved {
-    Vector2 delta;
-    Vector2 pos;
+  Vector2 delta;
+  Vector2 pos;
 };
 
 struct TimeEvent {
-    float dt;
+  float dt;
 };

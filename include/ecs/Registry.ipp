@@ -3,8 +3,8 @@ void EntityRegistry::AddComponent(EntityId id, Args&&... args) {
   ComponentTypeId component_type_id = ComponentHolder<ComponentT>::GetTypeId();
 
   assert(entities_.find(id) != entities_.end());
-  assert(components_[component_type_id].find(id) == components_[component_type_id].end()); 
-      
+  assert(components_[component_type_id].find(id) == components_[component_type_id].end());
+
   IComponentHolder* component_holder = new ComponentHolder<ComponentT>(std::forward<Args>(args)...);
 
   entities_[id].emplace(component_type_id, component_holder);
@@ -21,7 +21,7 @@ void EntityRegistry::RemoveComponent(EntityId id) {
   components_[component_type_id].erase(id);
   IComponentHolder* component_to_remove_holder = entities_[id].find(component_type_id)->second;
   entities_[id].erase(component_type_id);
-  
+
   delete component_to_remove_holder;
 }
 

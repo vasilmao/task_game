@@ -1,9 +1,9 @@
 #pragma once
 
+#include <unordered_map>
+
 #include "ecs/EntityHandle.hpp"
 #include "ecs/Registry.hpp"
-
-#include <unordered_map>
 
 template <typename ComponentT>
 class View {
@@ -22,13 +22,9 @@ class View {
     EntityHandle GetEntityHandle() const;
 
    public:
-    friend bool operator==(const Iterator& lhs, const Iterator& rhs) {
-      return lhs.iterator_ == rhs.iterator_;
-    }
+    friend bool operator==(const Iterator& lhs, const Iterator& rhs) { return lhs.iterator_ == rhs.iterator_; }
 
-    friend bool operator!=(const Iterator& lhs, const Iterator& rhs) {
-      return lhs.iterator_ != rhs.iterator_;
-    }
+    friend bool operator!=(const Iterator& lhs, const Iterator& rhs) { return lhs.iterator_ != rhs.iterator_; }
 
     friend std::pair<EntityHandle, ComponentT*> operator*(const Iterator& it) {
       return std::pair<EntityHandle, ComponentT*>(it.GetEntityHandle(), it.GetComponent());

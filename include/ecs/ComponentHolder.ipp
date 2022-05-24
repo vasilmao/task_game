@@ -1,14 +1,11 @@
 template <typename ComponentT>
 template <typename... Args>
-ComponentHolderBase<ComponentT>::ComponentHolderBase(Args&&... args) 
-    : component_{std::forward<Args>(args)...} {
-}
+ComponentHolderBase<ComponentT>::ComponentHolderBase(Args&&... args) : component_{std::forward<Args>(args)...} {}
 
 template <typename ComponentT>
 template <typename... Args>
 ComponentHolder<ComponentT>::ComponentHolder(Args&&... args)
-    : ComponentHolderBase<ComponentT>{std::forward<Args>(args)...} {
-}
+    : ComponentHolderBase<ComponentT>{std::forward<Args>(args)...} {}
 
 template <typename ComponentT>
 ComponentT* ComponentHolder<ComponentT>::Get() {

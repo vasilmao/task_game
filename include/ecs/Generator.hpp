@@ -13,7 +13,7 @@ template <typename Id>
 class StaticIdGenerator {
  public:
   static Id Next();
- 
+
  private:
   static Id current_;
 };

@@ -12,8 +12,7 @@
 // backbuffer
 extern uint32_t buffer[SCREEN_HEIGHT][SCREEN_WIDTH];
 
-enum
-{
+enum {
   VK_ESCAPE,
   VK_SPACE,
   VK_LEFT,
