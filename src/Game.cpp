@@ -5,6 +5,10 @@
 #include "drawers/Drawers.hpp"
 #include "collision/CollisionManager.hpp"
 #include "collision/CollisionResponce.hpp"
+#include "event_system/EventSystem.hpp"
+#include "InputHandler.hpp"
+#include "ObjectSpawn.hpp"
+#include "PlayerEventHandler.hpp"
 
 #include <stdlib.h>
 #include <memory.h>
@@ -27,48 +31,48 @@ Renderer* renderer = nullptr;
 EntityRegistry registry{};
 CollisionManager manager{};
 CollisionResponcer responcer{};
+Dispatcher dispatcher{};
+InputHandler* input_handler;
+PlayerEventHandler* player_event_handler;
+
 
 void AddWalls();
+void CheckInput();
+void RegisterCallback();
 
 // initialize game data in this function
 void initialize()
 {
+  input_handler = new InputHandler{dispatcher};
   renderer = new Renderer{reinterpret_cast<uint32_t*>(buffer), SCREEN_WIDTH, SCREEN_HEIGHT};
   scene = new Scene{registry};
-  EntityHandle player = CreateEntity(registry);
 
-  Vector2 player_start_pos{100, 100};
-  float player_radius = 20.0f;
-
-  player.AddComponent<Health>(100, 100);
-  player.AddComponent<RenderComponent>(std::bind(&PlayerDrawer::Render, PlayerDrawer{player, player_radius}, std::placeholders::_1));
-  player.AddComponent<Transform>(player_start_pos, 0.0f);
-  player.AddComponent<CollisionShape>(new CollisionCircle{player_start_pos, player_radius});
-  player.AddComponent<Speed>(Vector2{0, 0});
-  player.AddComponent<EntityTypeComponent>(PLAYER);
+  EntityHandle player = CreatePlayer(registry, {100, 100}, 20.0f);
 
   scene->AddEntity(player);
 
-  EntityHandle enemy = CreateEntity(registry);
-  enemy.AddComponent<Health>(100, 100);
-  enemy.AddComponent<RenderComponent>(std::bind(&StrangeEnemyDrawer::Render, StrangeEnemyDrawer{enemy, player_radius}, std::placeholders::_1));
-  enemy.AddComponent<Transform>(Vector2{300, 300}, 0.0f);
-  enemy.AddComponent<CollisionShape>(new CollisionCircle{Vector2{300, 300}, player_radius});
-  enemy.AddComponent<Speed>(Vector2{400, 400});
-  enemy.AddComponent<EntityTypeComponent>(ENEMY);
+  player_event_handler = new PlayerEventHandler{player, 300};
+
+  RegisterCallback();
+
+
+  EntityHandle enemy = CreateStrangeEnemy(registry, {100, 100}, 20.0f, Vector2{200, 200});
 
   scene->AddEntity(enemy);
 
   AddWalls();
+
+
 }
 
 // this function is called to update game data,
 // dt - time elapsed since the previous update (in seconds)
 void act(float dt)
 {
-  if (is_key_pressed(VK_ESCAPE))
-    schedule_quit_game();
-  
+  std::cout << "check_input\n";
+  CheckInput();
+
+  std::cout << "act\n";
   std::list<EntityHandle>& entities = scene->GetEntities();
   for (auto it = entities.begin(); it != entities.end(); ++it) {
     if (it->HasComponent<Speed>() && it->HasComponent<Transform>()) {
@@ -81,7 +85,7 @@ void act(float dt)
       }
     }
   }
-
+  std::cout << "collide\n";
   for (auto it1 = entities.begin(); it1 != entities.end(); ++it1) {
     auto it1_copy = it1;
     it1_copy++;
@@ -98,6 +102,7 @@ void act(float dt)
 void draw()
 {
   // clear backbuffer
+  std::cout << "draw\n";
   memset(buffer, 0, SCREEN_HEIGHT * SCREEN_WIDTH * sizeof(uint32_t));
   std::list<EntityHandle>& entities = scene->GetEntities();
   for (auto it = entities.begin(); it != entities.end(); ++it) {
@@ -105,11 +110,14 @@ void draw()
       it->GetComponent<RenderComponent>()->render(*renderer);
     }
   }
+  std::cout << "draw complete\n";
 }
 
 // free game data in this function
 void finalize()
 {
+  delete scene;
+  delete input_handler;
 }
 
 void AddWalls() {
@@ -135,4 +143,38 @@ void AddWalls() {
   up_wall.AddComponent<EntityTypeComponent>(WALL);
   scene->AddEntity(up_wall);
 
+}
+
+void CheckInput() {
+  if (is_key_pressed(VK_ESCAPE))
+    schedule_quit_game();
+
+  input_handler->CheckSpace(is_key_pressed(VK_SPACE));
+
+  input_handler->CheckLeftArrow(is_key_pressed(VK_LEFT));
+  input_handler->CheckRightArrow(is_key_pressed(VK_RIGHT));
+  input_handler->CheckUpArrow(is_key_pressed(VK_UP));
+  input_handler->CheckDownArrow(is_key_pressed(VK_DOWN));
+
+  input_handler->CheckLeftMouse(is_mouse_button_pressed(0));
+  input_handler->CheckRightMouse(is_mouse_button_pressed(1));
+
+  input_handler->CheckMousePos(Vector2{get_cursor_x(), get_cursor_y()});
+}
+
+void RegisterCallback() {
+  dispatcher.GetSink<LeftArrowDown>().Connect<&PlayerEventHandler::RespondLeftArrowDown>(*player_event_handler);
+  dispatcher.GetSink<LeftArrowUp>().Connect<&PlayerEventHandler::RespondLeftArrowUp>(*player_event_handler);
+
+  dispatcher.GetSink<RightArrowDown>().Connect<&PlayerEventHandler::RespondRightArrowDown>(*player_event_handler);
+  dispatcher.GetSink<RightArrowUp>().Connect<&PlayerEventHandler::RespondRightArrowUp>(*player_event_handler);
+
+  dispatcher.GetSink<UpArrowDown>().Connect<&PlayerEventHandler::RespondUpArrowDown>(*player_event_handler);
+  dispatcher.GetSink<UpArrowUp>().Connect<&PlayerEventHandler::RespondUpArrowUp>(*player_event_handler);
+
+  dispatcher.GetSink<DownArrowDown>().Connect<&PlayerEventHandler::RespondDownArrowDown>(*player_event_handler);
+  dispatcher.GetSink<DownArrowUp>().Connect<&PlayerEventHandler::RespondDownArrowUp>(*player_event_handler);
+
+  dispatcher.GetSink<LeftMouseDown>().Connect<&PlayerEventHandler::RespondLMBDown>(*player_event_handler);
+  dispatcher.GetSink<LeftMouseUp>().Connect<&PlayerEventHandler::RespondLMBUp>(*player_event_handler);
 }

@@ -76,3 +76,5 @@ void Swap(T* el1, T* el2) {
 }
 
 float power(float x, int p);
+
+bool FloatEqual(float f1, float f2);

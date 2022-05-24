@@ -1,7 +1,5 @@
 {
-    "targets" : [
-        "src/Game.cpp"
-    ],
+    "targets" : "game",
 
     "prohibited_dirs" : [
         ".git",

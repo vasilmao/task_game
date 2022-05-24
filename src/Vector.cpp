@@ -30,6 +30,18 @@ void Vector2::Normalize() {
     y /= length;
 }
 
+bool operator == (const Vector2& v1, const Vector2& v2) {
+    return FloatEqual(v1.GetX(), v2.GetX()) && FloatEqual(v1.GetY(), v2.GetY());
+}
+
+bool operator != (const Vector2& v1, const Vector2& v2) {
+    return !(v1 == v2);
+}
+
+Vector2 operator - (const Vector2& v) {
+    return Vector2{-v.x, -v.y};
+}
+
 Vector2& operator += (Vector2& v1, const Vector2& v2) {
     v1.x += v2.x;
     v1.y += v2.y;
@@ -103,6 +115,22 @@ float DistSquare(const Vector2& p1, const Vector2& p2) {
     return (p1.GetX() - p2.GetX()) * (p1.GetX() - p2.GetX()) + (p1.GetY() - p2.GetY()) * (p1.GetY() - p2.GetY());
 }
 
+float Angle(const Vector2& v1, const Vector2& v2) {
+    if (fabs(v1.GetLength()) < EPS || fabs(v1.GetLength()) < EPS) {
+        return 0;
+    }
+    float angle_cos = (v1 * v2) / v1.GetLength() / v2.GetLength();
+    float angle_sin = (v1 ^ v2) / v1.GetLength() / v2.GetLength();
+    if (angle_sin > 0) {
+        return acos(angle_cos);
+    } else {
+        return -acos(angle_cos);
+    }
+}
+
 float AngleCos(const Vector2& v1, const Vector2& v2) {
+    if (fabs(v1.GetLength()) < EPS || fabs(v1.GetLength()) < EPS) {
+        return 1;
+    }
     return (v1 * v2) / v1.GetLength() / v2.GetLength();
 }

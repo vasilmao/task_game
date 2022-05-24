@@ -15,3 +15,7 @@ float power(float x, int p) {
         return half_p_res * half_p_res;
     }
 }
+
+bool FloatEqual(float f1, float f2) {
+    return fabs(f1 - f2) < EPS;
+}

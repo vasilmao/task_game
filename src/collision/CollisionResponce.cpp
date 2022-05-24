@@ -50,7 +50,13 @@ void ResponceCollisionWE(EntityHandle& e1, EntityHandle& e2) {
     Vector2 speed = e2.GetComponent<Speed>()->speed;
 
     Vector2 projection = (speed).GetProjection(v3);
-    Vector2 speed_reflection = (projection - speed) + projection;
+
+    Vector2 dir = projection - speed;
+    if (dir * (a - b) < 0) {
+        dir = -dir;
+    }
+
+    Vector2 speed_reflection = dir + projection;
     e2.GetComponent<Speed>()->speed = speed_reflection;
 }
 

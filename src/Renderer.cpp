@@ -15,7 +15,7 @@ void Renderer::DrawSegment(Vector2 p1, Vector2 p2, Color color) {
     int endy = p2.GetY();
 
     while (true) {
-        if (0 <= curx && curx <= width_ && 0 <= cury && cury <= height_) {
+        if (0 <= curx && curx < width_ && 0 <= cury && cury < height_) {
             buffer_[curx + cury * width_] = int32_color(color);
         }
         if (curx == endx && cury == endy) {
