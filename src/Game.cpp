@@ -8,7 +8,7 @@
 #include "event_system/EventSystem.hpp"
 #include "InputHandler.hpp"
 #include "ObjectSpawn.hpp"
-#include "PlayerEventHandler.hpp"
+#include "game_logic/PlayerEventHandler.hpp"
 
 #include <stdlib.h>
 #include <memory.h>
@@ -51,10 +51,14 @@ void initialize()
 
   scene->AddEntity(player);
 
-  player_event_handler = new PlayerEventHandler{player, 300};
+  player_event_handler = new PlayerEventHandler{player, *scene, registry, 300};
 
   RegisterCallback();
 
+  DefaultWeapon* weapon = new DefaultWeapon{player};
+  dispatcher.GetSink<TimeEvent>().Connect<&DefaultWeapon::Cooldown>(*weapon);
+
+  player.AddComponent<Weapon>(weapon);
 
   EntityHandle enemy = CreateStrangeEnemy(registry, {100, 100}, 20.0f, Vector2{200, 200});
 
@@ -71,6 +75,8 @@ void act(float dt)
 {
   std::cout << "check_input\n";
   CheckInput();
+
+  dispatcher.Trigger<TimeEvent>(dt);
 
   std::cout << "act\n";
   std::list<EntityHandle>& entities = scene->GetEntities();
@@ -93,6 +99,18 @@ void act(float dt)
       if (manager.DetectCollision(dynamic_cast<ICollisionShape*>(it1->GetComponent<CollisionShape>()->form), dynamic_cast<ICollisionShape*>(it2->GetComponent<CollisionShape>()->form))) {
         responcer.ResponceCollision(*it1, *it2);
       }
+    }
+  }
+
+  std::cout << "clear\n";
+  for (auto it = entities.begin(); it != entities.end();) {
+    if (it->HasComponent<OnDelete>()) {
+      auto it_copy = it;
+      ++it;
+      it_copy->Destroy();
+      entities.erase(it_copy);
+    } else {
+      ++it;
     }
   }
 }
@@ -126,8 +144,6 @@ void AddWalls() {
   down_wall.AddComponent<EntityTypeComponent>(WALL);
   scene->AddEntity(down_wall);
 
-
-
   EntityHandle left_wall = CreateEntity(registry);
   left_wall.AddComponent<CollisionShape>(new CollisionWall{Vector2{0, 0}, Vector2{0, SCREEN_HEIGHT}});
   left_wall.AddComponent<EntityTypeComponent>(WALL);
@@ -159,7 +175,7 @@ void CheckInput() {
   input_handler->CheckLeftMouse(is_mouse_button_pressed(0));
   input_handler->CheckRightMouse(is_mouse_button_pressed(1));
 
-  input_handler->CheckMousePos(Vector2{get_cursor_x(), get_cursor_y()});
+  input_handler->CheckMousePos(Vector2{static_cast<float>(get_cursor_x()), static_cast<float>(get_cursor_y())});
 }
 
 void RegisterCallback() {
@@ -175,6 +191,10 @@ void RegisterCallback() {
   dispatcher.GetSink<DownArrowDown>().Connect<&PlayerEventHandler::RespondDownArrowDown>(*player_event_handler);
   dispatcher.GetSink<DownArrowUp>().Connect<&PlayerEventHandler::RespondDownArrowUp>(*player_event_handler);
 
+  dispatcher.GetSink<MouseMoved>().Connect<&PlayerEventHandler::RespondMouseMove>(*player_event_handler);
+
   dispatcher.GetSink<LeftMouseDown>().Connect<&PlayerEventHandler::RespondLMBDown>(*player_event_handler);
   dispatcher.GetSink<LeftMouseUp>().Connect<&PlayerEventHandler::RespondLMBUp>(*player_event_handler);
+
+  dispatcher.GetSink<TimeEvent>().Connect<&PlayerEventHandler::RespondTime>(*player_event_handler);
 }

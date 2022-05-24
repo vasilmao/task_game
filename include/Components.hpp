@@ -2,6 +2,7 @@
 #include "Renderer.hpp"
 #include "EntityTypes.hpp"
 #include "CollisionTypes.hpp"
+#include "Weapons.hpp"
 #include <functional>
 
 struct Health {
@@ -39,4 +40,11 @@ struct OnDelete {};
 
 struct Speed {
     Vector2 speed;
+};
+
+struct Weapon {
+    IWeapon* weapon;
+    ~Weapon() {
+        delete weapon;
+    }
 };

@@ -11,3 +11,9 @@ void Scene::AddEntity(const EntityHandle& handle) {
 std::list<EntityHandle>& Scene::GetEntities() {
     return entities_;
 }
+
+Scene::~Scene() {
+    for (auto it = entities_.begin(); it != entities_.end(); ++it) {
+        it->Destroy();
+    }
+}

@@ -26,8 +26,17 @@ float Vector2::GetLength() const {
 
 void Vector2::Normalize() {
     float length = GetLength();
+    if (length < EPS) {
+        return;
+    }
     x /= length;
     y /= length;
+}
+
+Vector2 Vector2::GetNormalized() {
+    Vector2 new_v{*this};
+    new_v.Normalize();
+    return new_v;
 }
 
 bool operator == (const Vector2& v1, const Vector2& v2) {

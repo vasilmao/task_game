@@ -9,6 +9,7 @@ class Scene {
   Scene(EntityRegistry& registry);
   void AddEntity(const EntityHandle& handle);
   std::list<EntityHandle>& GetEntities();
+  ~Scene();
  private:
   EntityRegistry& registry_;
   // EntityHandle player_;

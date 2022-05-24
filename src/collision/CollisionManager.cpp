@@ -6,7 +6,10 @@ bool CollisionManager::DetectCollision(ICollisionShape* s1, ICollisionShape* s2)
     if (s1->GetType() > s2->GetType()) {
         std::swap(s1, s2);
     }
-    return (*detect_collision_virtual_table_[(int)s1->GetType()][(int)s2->GetType()])(s1, s2);
+    if (detect_collision_virtual_table_[(int)s1->GetType()][(int)s2->GetType()] != nullptr) {
+        return (*detect_collision_virtual_table_[(int)s1->GetType()][(int)s2->GetType()])(s1, s2);
+    }
+    return false;
 }
 
 bool CirclesIntersec(const Vector2& c1, const float r1, const Vector2& c2, const float r2) {

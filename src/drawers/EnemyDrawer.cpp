@@ -18,7 +18,7 @@ void StrangeEnemyDrawer::Render(Renderer& renderer) {
     Vector2 point2 = down_point.Rotate(pos, acos(4.0f/5.0f));
     Vector2 point4 = down_point.Rotate(pos, -acos(4.0f/5.0f));
 
-    Color enemy_color = {255, 0, 0, 255};
+    Color enemy_color = {255, 0, 255, 255};
 
     renderer.DrawSegment(point1, point2, enemy_color);
     renderer.DrawSegment(point2, point3, enemy_color);

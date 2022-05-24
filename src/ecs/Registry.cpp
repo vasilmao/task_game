@@ -4,6 +4,7 @@
 
 EntityId EntityRegistry::CreateEntity() {
   EntityId id = entity_id_generator_.Next();
+  std::cout << id <<"\n";
   entities_.emplace(id, ComponentMap{});
   return id;
 }

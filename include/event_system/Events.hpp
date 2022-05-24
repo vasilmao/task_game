@@ -27,3 +27,7 @@ struct MouseMoved {
     Vector2 delta;
     Vector2 pos;
 };
+
+struct TimeEvent {
+    float dt;
+};

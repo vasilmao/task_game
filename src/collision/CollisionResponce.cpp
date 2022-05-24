@@ -14,7 +14,9 @@ void CollisionResponcer::ResponceCollision(EntityHandle& e1, EntityHandle& e2) {
         std::swap(type1, type2);
         std::swap(e1, e2);
     }
-    (*responce_collision_virtual_table_[type1][type2])(e1, e2);
+    if (responce_collision_virtual_table_[type1][type2] != nullptr) {
+        (*responce_collision_virtual_table_[type1][type2])(e1, e2);
+    }
 }
 
 void ResponceCollisionPW(EntityHandle& e1, EntityHandle& e2) {
@@ -30,11 +32,15 @@ void ResponceCollisionPB(EntityHandle& e1, EntityHandle& e2) {
     assert(e1.HasComponent<Health>());
     assert(e2.HasComponent<Damage>());
     e1.GetComponent<Health>()->current_value -= e2.GetComponent<Damage>()->damage;
-    e2.AddComponent<OnDelete>();
+    if (!e2.HasComponent<OnDelete>()) {
+        e2.AddComponent<OnDelete>();
+    }
+    if (e1.GetComponent<Health>()->current_value <= 0 && !e1.HasComponent<OnDelete>()) {
+        e1.AddComponent<OnDelete>();
+    }
 }
 
 void ResponceCollisionWE(EntityHandle& e1, EntityHandle& e2) {
-    std::cout << "responsin...\n";
     assert(e2.HasComponent<Speed>());
     assert(e2.HasComponent<CollisionShape>());
     CollisionCircle* phys_circle = dynamic_cast<CollisionCircle*>(e2.GetComponent<CollisionShape>()->form);
@@ -68,5 +74,10 @@ void ResponceCollisionEB(EntityHandle& e1, EntityHandle& e2) {
     assert(e1.HasComponent<Health>());
     assert(e2.HasComponent<Damage>());
     e1.GetComponent<Health>()->current_value -= e2.GetComponent<Damage>()->damage;
-    e2.AddComponent<OnDelete>();
+    if (!e2.HasComponent<OnDelete>()) {
+        e2.AddComponent<OnDelete>();
+    }
+    if (e1.GetComponent<Health>()->current_value <= 0 && !e1.HasComponent<OnDelete>()) {
+        e1.AddComponent<OnDelete>();
+    }
 }

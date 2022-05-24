@@ -1,3 +1,5 @@
+#include <iostream>
+
 template <typename Id>
 Id IdGenerator<Id>::Next() {
   return current_++;

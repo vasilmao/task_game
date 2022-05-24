@@ -21,6 +21,7 @@ public:
     void SetY(float new_y);
     float GetLength() const;
     void Normalize();
+    Vector2 GetNormalized();
 
     friend bool operator == (const Vector2& v1, const Vector2& v2);
     friend bool operator != (const Vector2& v1, const Vector2& v2);
